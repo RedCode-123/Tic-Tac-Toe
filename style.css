@@ -1,3 +1,74 @@
+
+/* TODO checar lo de quitar los formatos pre-establecidos */
+
+@import url('https://fonts.googleapis.com/css2?family=Tiny5&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dynalight&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+:root {
+    font-size: x-small;
+    box-sizing: border-box;
+}
+
+.tiny5-regular {
+  font-family: "Tiny5", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+.dynalight-regular {
+  font-family: "Dynalight", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.press-start-2p-regular {
+  font-family: "Press Start 2P", system-ui;
+  font-weight: 400;
+}
+
 body {
-    background-color: red;
+    width: 100vw;
+    font-size: 4rem;
+
+}
+
+.title {
+    width: 100vw;
+    /* background-color: green; */
+    display: grid;
+    place-items: center;
+}
+
+.title > h1 {
+    text-shadow: -4px -2px 6px #EF1FE8;
+}
+
+.title > button {
+    font-size: 8rem;
+    /* font-weight: 800; */
+    /* text-shadow: 0px 0px 20px #EF1FE8; */
+text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #EF1FE8, 0 0 30px #EF1FE8, 0 0 40px #EF1FE8, 0 0 55px #EF1FE8, 0 0 75px #EF1FE8;
+    color: whitesmoke;
+    /* -webkit-text-stroke: 1px black; */
+}
+
+
+.main {
+    margin-top: 40px;
+    width: 100vw;
+    display: flex;
+    justify-content: space-evenly;
+
+}
+
+.main > .board {
+    width: 100px;
+    height: 100px;
+    display: grid;
+    grid-template: repeat(3, 1fr)/ repeat(3, 1fr) ;
+
+}
+
+.cell {
+    border: 0.1px solid black;
 }
