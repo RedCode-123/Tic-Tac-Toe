@@ -47,8 +47,10 @@ body {
     font-size: 8rem;
     /* font-weight: 800; */
     /* text-shadow: 0px 0px 20px #EF1FE8; */
-text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #EF1FE8, 0 0 30px #EF1FE8, 0 0 40px #EF1FE8, 0 0 55px #EF1FE8, 0 0 75px #EF1FE8;
-    color: whitesmoke;
+text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #775FFC, 0 0 30px #775FFC, 0 0 40px #775FFC, 0 0 55px #775FFC, 0 0 75px #775FFC;
+    color: #EF1FE8;
+    background-color: white;
+    border: 0px;
     /* -webkit-text-stroke: 1px black; */
 }
 
@@ -57,13 +59,15 @@ text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #EF1FE8, 0 0 3
     margin-top: 40px;
     width: 100vw;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
+    font-size: 1.2rem;
+    /* gap: 20px; */
 
 }
 
 .main > .board {
-    width: 100px;
-    height: 100px;
+    width: 200px;
+    height: 200px;
     display: grid;
     grid-template: repeat(3, 1fr)/ repeat(3, 1fr) ;
 
@@ -71,4 +75,8 @@ text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #EF1FE8, 0 0 3
 
 .cell {
     border: 0.1px solid black;
+    display: grid;
+    place-items: center;
+    font-size: 3rem;
 }
+
