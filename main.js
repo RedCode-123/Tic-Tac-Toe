@@ -3,7 +3,7 @@
 // Model
 function createPlayer(name, symbol, color, id) {
     let moves = [];
-    let lastMove = [0, 0];
+    let lastMove = [];
     let score = 0;
 
     function resetMoves() {
@@ -31,35 +31,13 @@ function createPlayer(name, symbol, color, id) {
     function getColumns() {
         return moves.reduce((cols, col ) => cols + col[1].toString(), ""); // Return a string or numbers
     }
-    function doIWin() { // Return a boolean
-        let rows = getRows();
-        let columns = getColumns();
-        let winRowOrColumn = ["000", "111", "222"];
-        let winDiagonal = ["012", "210", "102", "120", "021", "201"];
-
-        if (rows.length >= 3 && columns.length >= 3) {
-            let lastThreerows = rows.slice(-3);
-            let lastThreeColumns = columns.slice(-3);
-            if (winRowOrColumn.includes(lastThreerows) || winRowOrColumn.includes(lastThreeColumns)) {
-                return true;
-            }
-            // if (lastThreerows === lastThreeColumns) {
-                if (winDiagonal.includes(lastThreerows) && winDiagonal.includes(lastThreeColumns)) {
-                   return true;
-                }
-
-            // }
-        }
-
-        return false;
-    }
 
     function getLastCellInfo() {
         // Return an obj that goes into the cell
-        return {"symbol" : symbol, "player": name, "coor": getLastMove(), color}
+        return {"symbol" : symbol, "player": name, "coor": getLastMove(), color, id}
     }
 
-    return {name, symbol,setLastMove, getLastMove , getMoves, getRows, getColumns, doIWin, getLastCellInfo, color, id, score, resetMoves};
+    return {name, symbol,setLastMove, getLastMove , getMoves, getRows, getColumns, getLastCellInfo, color, id, score, resetMoves};
 }
 
 function createBoard() {
@@ -84,6 +62,7 @@ function createBoard() {
         //     "symbol":player2.symbol,
         //     "player":player2.name,
         //     "coor": player2.getLastMove()
+        //     "id": player2.id
         // }
         board[cellInfo.coor[0]][cellInfo.coor[1]] = cellInfo;
     }
@@ -112,9 +91,64 @@ function createBoard() {
         let theColor = board[coor[0]][coor[1]]?.color;
         return theColor ?? "black";
     }
-    // TODO Agregar una función que compruebe si una coordenada ya estpa ocupada
 
-    return {board, addMove, isCellAvailable, cellsAvailable, getSymbol, getColor, resetMoves};
+    function winnerId() {
+        // Analizar cada fila y ver quién ganó
+        for (let row = 0; row <= 2; row++) {
+            if (board[row].every(cell => cell.id === 1)) {
+                return 1;
+            }
+            if (board[row].every(cell => cell.id === 2)) {
+                return 2;
+            }
+        }
+        // Analizar cada columna
+        for(let col = 0; col <=2; col++) {
+            let rows = [];
+            for (let row = 0; row <= 2; row++) {
+                rows.push(board[row][col]);
+            }
+            if (rows.every(cell => cell.id === 1)) {
+                return 1;
+            }
+            if (rows.every(cell => cell.id === 2)) {
+                return 2;
+            }
+        }
+        // Analizar cada diagonal
+        let diag1 = [];
+        for (let col = 0; col <=2; col++) {
+            for (let row = 0; row <= 2; row++) {
+                if (col === row) {
+                    diag1.push(board[row][col]);
+                }
+            }
+        }
+        if (diag1.every(cell => cell.id === 1)) {
+            return 1;
+        }
+        if (diag1.every(cell => cell.id === 2)) {
+            return 2;
+        }
+
+        let row2 = 2;
+        let col2 = 0;
+        let diag2 = [];
+        while (diag2.length < 3) {
+            diag2.push(board[row2][col2]);
+            row2 -= 1;
+            col2 += 1;
+        }
+            if (diag2.every(cell => cell.id === 1)) {
+                return 1;
+            }
+            if (diag2.every(cell => cell.id === 2)) {
+                return 2;
+            }
+
+    }
+
+    return {board, addMove, isCellAvailable, cellsAvailable, getSymbol, getColor, resetMoves, winnerId};
 }
 
 // View
@@ -247,10 +281,9 @@ function updateState(coor = null) {
         if (board.isCellAvailable(coor)) {
             currentPlayer.setLastMove(coor);
             board.addMove(currentPlayer.getLastCellInfo());
-            if (currentPlayer.doIWin() === true) {
-                // TODO
-                let score = document.querySelector(`.player${currentPlayer.id}score`);
-                if (currentPlayer.id === 1) {
+            if (board.winnerId() === 1 || board.winnerId() === 2 ) {
+                let score = document.querySelector(`.player${board.winnerId()}score`);
+                if (board.winnerId() === 1) {
                     player1.score = 1 + +player1.score
                     score.textContent = player1.score;
                     currentPlayer = player1;
@@ -259,12 +292,25 @@ function updateState(coor = null) {
                     score.textContent = player2.score;
                     currentPlayer = player2;
                 }
-                player1.resetMoves();
-                player2.resetMoves();
-                board.resetMoves();
-                view.updateBoard();
-                return;
+
+                let msj = document.querySelector(".board");
+                msj.classList.add("board-msj");
+                msj.classList.remove("board");
+                msj.textContent = `Player ${board.winnerId()} Win!`;
+
+                setTimeout(() => {
+                    player1.resetMoves();
+                    player2.resetMoves();
+                    board.resetMoves();
+                    // TODO Agregar un timer antes de empezar de nuevo e indicar que jugador ganó
+                    // Podríamos agregar un mensaje en el centro del tablero
+                    msj.classList.remove("board-msj");
+                    msj.classList.add("board");
+                    view.updateBoard();
+                }, 2000);
+                    return;
             }
+
             currentPlayer === player1 ? currentPlayer = player2 : currentPlayer = player1;
             view.updateBoard();
         }
