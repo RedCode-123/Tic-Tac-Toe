@@ -32,6 +32,16 @@ body {
 
 }
 
+dialog {
+    border-style: none;
+    font-size: 2rem;
+}
+
+main {
+    display: grid;
+    place-items: center;
+}
+
 .title {
     width: 100vw;
     /* background-color: green; */
@@ -57,7 +67,7 @@ text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #775FFC, 0 0 3
 
 .main {
     margin-top: 40px;
-    width: 100vw;
+    width: 900px;
     display: flex;
     justify-content: space-around;
     font-size: 1.2rem;
@@ -82,5 +92,5 @@ text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #775FFC, 0 0 3
 
 .board-msj {
   display: inline;
-    text-align:center;
+  text-align: center;
 }

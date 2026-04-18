@@ -146,6 +146,19 @@ function createBoard() {
                 return 2;
             }
 
+        // SI NO HAY NINGUNA CELDA VACÍA
+        //
+        let noEmptyRows = [];
+        for (let row = 0; row <= 2; row++) {
+            const emptyCell = (cell) => cell === "";
+            if (!board[row].some(emptyCell)) {
+                noEmptyRows.push(true);
+            }
+
+        }
+        if (noEmptyRows.length === 3 && noEmptyRows.every(row => row === true)) {
+            return 0; // No-one wins
+        }
     }
 
     return {board, addMove, isCellAvailable, cellsAvailable, getSymbol, getColor, resetMoves, winnerId};
@@ -209,7 +222,16 @@ function createView(player) {
         });
     }
 
-    return {updateBoard, addFunctionToStart}
+    function showMsj(msj) {
+        const dialog = document.querySelector("dialog");
+        const closebtn = document.querySelector("dialog button");
+        const modalMsj = document.querySelector("dialog p");
+        modalMsj.textContent = msj;
+        closebtn.addEventListener("click", () => { dialog.close();})
+        dialog.showModal();
+    }
+
+    return {updateBoard, addFunctionToStart, showMsj}
 }
 
 
@@ -218,6 +240,9 @@ function createView(player) {
 function reset() {
     start = false;
     board =  createBoard();
+    let score1 = document.querySelector(`.player1score`);
+    let score2 = document.querySelector(`.player2score`);
+    score1.textContent = score2.textContent = "__";
     player1Name.removeAttribute("disabled");
     player1Name.value = "";
     player1Symbol.textContent = player2Symbol.textContent = "__";
@@ -244,6 +269,8 @@ let currentPlayer;
 let view =  createView();
 view.updateBoard();
 let start = false;
+
+
 view.addFunctionToStart(updateState);
 
 
@@ -281,34 +308,29 @@ function updateState(coor = null) {
         if (board.isCellAvailable(coor)) {
             currentPlayer.setLastMove(coor);
             board.addMove(currentPlayer.getLastCellInfo());
-            if (board.winnerId() === 1 || board.winnerId() === 2 ) {
-                let score = document.querySelector(`.player${board.winnerId()}score`);
-                if (board.winnerId() === 1) {
-                    player1.score = 1 + +player1.score
-                    score.textContent = player1.score;
-                    currentPlayer = player1;
-                } else {
-                    player2.score = 1 + +player2.score
-                    score.textContent = player2.score;
-                    currentPlayer = player2;
-                }
+            if (board.winnerId() === 1) {
+                let score = document.querySelector(`.player1score`);
+                player1.score = 1 + +player1.score
+                score.textContent = player1.score;
+                currentPlayer = player1;
+                view.showMsj(`${player1.name} win!`);
 
-                let msj = document.querySelector(".board");
-                msj.classList.add("board-msj");
-                msj.classList.remove("board");
-                msj.textContent = `Player ${board.winnerId()} Win!`;
+            } else if(board.winnerId() === 2)  {
+                let score = document.querySelector(`.player2score`);
+                player2.score = 1 + +player2.score
+                score.textContent = player2.score;
+                currentPlayer = player2;
+                view.showMsj(`${player2.name} win!`);
+            } else if (board.winnerId() === 0) {
+                view.showMsj(`Draw!`);
+            }
 
-                setTimeout(() => {
-                    player1.resetMoves();
-                    player2.resetMoves();
-                    board.resetMoves();
-                    // TODO Agregar un timer antes de empezar de nuevo e indicar que jugador ganó
-                    // Podríamos agregar un mensaje en el centro del tablero
-                    msj.classList.remove("board-msj");
-                    msj.classList.add("board");
-                    view.updateBoard();
-                }, 2000);
-                    return;
+            if (board.winnerId() <= 3 ) {
+                player1.resetMoves();
+                player2.resetMoves();
+                board.resetMoves();
+                view.updateBoard();
+                return;
             }
 
             currentPlayer === player1 ? currentPlayer = player2 : currentPlayer = player1;
