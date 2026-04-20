@@ -148,16 +148,19 @@ function createBoard() {
 
         // SI NO HAY NINGUNA CELDA VACÍA
         //
-        let noEmptyRows = [];
-        for (let row = 0; row <= 2; row++) {
-            const emptyCell = (cell) => cell === "";
-            if (!board[row].some(emptyCell)) {
-                noEmptyRows.push(true);
-            }
+        // let noEmptyRows = [];
+        // for (let row = 0; row <= 2; row++) {
+        //     const emptyCell = (cell) => cell === "";
+        //     if (!board[row].some(emptyCell)) {
+        //         noEmptyRows.push(true);
+        //     }
 
-        }
-        if (noEmptyRows.length === 3 && noEmptyRows.every(row => row === true)) {
-            return 0; // No-one wins
+        // }
+        // if (noEmptyRows.length === 3 && noEmptyRows.every(row => row === true)) {
+        //     return 0; // No-one wins
+        // }
+        if (!cellsAvailable()) {
+            return 0 // None wins
         }
     }
 
